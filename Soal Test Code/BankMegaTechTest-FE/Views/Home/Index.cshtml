@@ -1,0 +1,91 @@
+﻿@model DetailBpkb
+
+@{
+    ViewData["Title"] = "Detail BPKB";
+    bool isUpdate = Model.Bpkb != null && !string.IsNullOrEmpty(Model.Bpkb.AgreementNumber);
+    string formAction = isUpdate ? Url.Action("UpdateBpkb", "Home") : Url.Action("InsertBpkb", "Home");
+    string buttonText = isUpdate ? "Update" : "Submit";
+
+    string FormatDate(DateTime? date)
+    {
+        return date.HasValue && date.Value != DateTime.MinValue
+            ? date.Value.ToString("yyyy-MM-dd")
+            : "";
+    }
+}
+
+<div class="container text-end mt-3 w-full">
+    <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
+        <button type="submit" class="btn btn-secondary">Logout</button>
+    </form>
+</div>
+@if (ViewData["Message"] != null)
+{
+    <div id="alertMessage" class="alert alert-info position-fixed top-0 start-0 m-3" role="alert">
+        @ViewData["Message"]
+    </div>
+}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Detail BPKB</h5>
+        </div>
+        <div class="card-body">
+            <form id="bpkbForm" action="@formAction" method="post">
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="agreementNumber">Agreement Number</label>
+                            <input value="@Model?.Bpkb?.AgreementNumber" type="text" class="form-control" id="agreementNumber" name="Bpkb.AgreementNumber" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="branchId">Branch ID</label>
+                            <input value="@Model?.Bpkb?.BranchId" type="text" class="form-control" id="branchId" name="Bpkb.BranchId" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="bpkbNo">No BPKB</label>
+                            <input value="@Model?.Bpkb?.BpkbNo" type="text" class="form-control" id="bpkbNo" name="Bpkb.BpkbNo" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="bpkbDateIn">BPKB Date In</label>
+                            <input value="@(FormatDate(Model.Bpkb.BpkbDateIn))" type="date" class="form-control" id="bpkbDateIn" name="Bpkb.BpkbDateIn" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="bpkbDate">Tanggal BPKB</label>
+                            <input value="@(FormatDate(Model?.Bpkb?.BpkbDate))" type="date" class="form-control" id="bpkbDate" name="Bpkb.BpkbDate" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="fakturNo">No Faktur</label>
+                            <input value="@Model?.Bpkb?.FakturNo" type="text" class="form-control" id="fakturNo" name="Bpkb.FakturNo" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="fakturDate">Tanggal Faktur</label>
+                            <input value="@(FormatDate(Model?.Bpkb?.FakturDate))" type="date" class="form-control" id="fakturDate" name="Bpkb.FakturDate" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="policeNo">No Polisi</label>
+                            <input value="@Model.Bpkb.PoliceNo" type="text" class="form-control" id="policeNo" name="Bpkb.PoliceNo" />
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="locationId">Lokasi Penyimpanan</label>
+                            <select class="form-control" id="locationId" name="Bpkb.LocationId">
+                                <option value="">Select a location</option>
+                                @foreach (var location in Model.Locations)
+                                {
+                                    <option value="@location.LocationId" selected="@(Model.Bpkb.LocationId == location.LocationId ? true : false)">@location.LocationName</option>
+                                }
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="text-center mt-3 w-full">
+                    <button type="submit" class="btn @(isUpdate ? "btn-primary" : "btn-success")">@buttonText</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
